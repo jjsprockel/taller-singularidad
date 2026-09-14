@@ -283,6 +283,12 @@ input:focus-visible,
   margin-bottom: var(--sp-3);
   display: inline-block;
 }
+.subsection-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--naranja-2);
+  margin: 1.1em 0 .5em;
+}
 .page-title { margin-top: 0; }
 /* El título recibe foco por programa al cambiar de ruta (para lectores de pantalla);
    no es un elemento interactivo, así que no debe mostrar anillo de foco visible. */
@@ -480,6 +486,138 @@ input:focus-visible,
 .step-text { min-width: 0; }
 .step-text p:last-child { margin-bottom: 0; }
 
+/* ---------- Visor de presentación en PDF ---------- */
+/* Reproduce el componente "bloquePdf" del sitio de referencia
+   (jjsprockel.github.io/singularidad-proyectos): toolbar con título,
+   descarga y apertura en pestaña nueva, visor embebido y enlace de respaldo. */
+.pdf-viewer-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 560px;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin: 14px 0;
+  background: var(--superficie);
+}
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--superficie-2);
+  flex-wrap: wrap;
+}
+.pdf-title {
+  flex: 1;
+  color: var(--texto);
+  font-size: .85rem;
+  font-weight: 600;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-pdf-download,
+.btn-pdf-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--linea);
+  color: var(--texto);
+  background: var(--superficie);
+  transition: border-color var(--trans), color var(--trans);
+}
+.btn-pdf-download { border-color: var(--naranja); color: var(--naranja-2); }
+.btn-pdf-download:hover,
+.btn-pdf-open:hover { border-color: var(--naranja-2); color: var(--naranja-2); text-decoration: none; }
+.btn-pdf-download::after, .btn-pdf-open::after { content: none; }
+.pdf-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #3A3A3D;
+  min-height: 0;
+}
+.pdf-fallback {
+  padding: 8px 14px;
+  font-size: .78rem;
+  color: var(--texto-sec);
+  background: var(--negro-2);
+  border-top: 1px solid var(--linea);
+  margin: 0;
+}
+.pdf-fallback a { color: var(--naranja-2); font-weight: 600; }
+
+/* ---------- Tarjetas mini (herramientas y recursos) ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 14px 0;
+}
+.mini-card {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r-md);
+  padding: 16px;
+  box-shadow: var(--sh-xs);
+  transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+  text-decoration: none;
+  display: block;
+}
+.mini-card:hover { transform: translateY(-3px); box-shadow: var(--sh-sm); border-color: rgba(232,137,46,.4); text-decoration: none; }
+.mini-card .mini-card-icon { font-size: 1.5rem; margin-bottom: 8px; }
+.mini-card h4 { font-size: .87rem; font-weight: 700; color: var(--texto); margin-bottom: 6px; }
+.mini-card p { font-size: .8rem; color: var(--texto-sec); line-height: 1.45; margin-bottom: 0; }
+.mini-card[target="_blank"]::after { content: none; }
+
+/* ---------- Flujo metodológico semanal ---------- */
+/* Reproduce el componente "flujo-metodologia" del sitio de referencia,
+   adaptado al ciclo semanal de cada taller (Preparar → Ejecutar → Verificar
+   → Retroalimentar → Ajustar). */
+.flujo-metodologia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+  margin: 14px 0;
+}
+.flujo-paso {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--texto);
+  flex: 1 1 160px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.flujo-paso .flujo-num {
+  background: var(--naranja);
+  color: #201200;
+  font-weight: 800;
+  font-size: .75rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.flujo-paso-texto { display: flex; flex-direction: column; gap: 2px; }
+.flujo-paso-evidencia { font-weight: 400; font-size: .74rem; color: var(--texto-sec); }
+
 /* ---------- Responsivo ---------- */
 @media (max-width: 1023px) {
   .mobile-menu-toggle { display: inline-flex; }
@@ -509,6 +647,14 @@ input:focus-visible,
   .step-item { grid-template-columns: auto 1fr; }
   .step-item .copy-btn { grid-column: 1 / -1; justify-self: start; }
   .taller-pager { flex-direction: column; }
+  .pdf-viewer-wrap { height: 420px; }
+  .pdf-title { font-size: .78rem; }
+  .flujo-metodologia { flex-direction: column; }
+  .flujo-paso { flex: none; }
+}
+
+@media (max-width: 480px) {
+  .pdf-viewer-wrap { height: 360px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

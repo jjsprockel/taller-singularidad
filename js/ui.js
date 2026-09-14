@@ -18,6 +18,91 @@ const PLANTILLAS = [
 
 const HITO_TALLERES = ['taller-03', 'taller-05', 'taller-07', 'taller-10', 'taller-12'];
 
+// Ciclo semanal transversal a los doce talleres (ver content/00_programa_general.md,
+// sección "Método de trabajo" y "Reunión semanal sugerida"). Reproduce, adaptado a los
+// talleres, el componente "flujo-metodologia" del sitio de referencia
+// (jjsprockel.github.io/singularidad-proyectos).
+const FASES_SEMANALES = [
+  { fase: 'Preparar', actividad: 'Revisar conceptos, recursos y prerrequisitos.', evidencia: 'Notas y preguntas.' },
+  { fase: 'Ejecutar', actividad: 'Completar la actividad paso a paso sobre el proyecto asignado.', evidencia: 'Archivo de trabajo y producto.' },
+  { fase: 'Verificar', actividad: 'Comprobar fuentes, datos, coherencia y privacidad.', evidencia: 'Lista de chequeo y bitácora.' },
+  { fase: 'Retroalimentar', actividad: 'Presentar decisiones, recibir objeciones y acordar cambios.', evidencia: 'Rúbrica breve y registro de decisiones.' },
+  { fase: 'Ajustar', actividad: 'Corregir y versionar antes del siguiente taller.', evidencia: 'Nueva versión y nota de cambios.' },
+];
+
+// Presentación general del programa (portafolio de los doce talleres).
+// Si el archivo no existe, bloquePdf() no se llama desde renderPrograma con datos vacíos,
+// así que el bloque se omite automáticamente.
+const PROGRAMA_PRESENTACION_PDF = 'assets/presentaciones/programa-general.pdf';
+
+function pdfUrlFor(numero) {
+  const idNum = String(numero).padStart(2, '0');
+  return `assets/presentaciones/taller-${idNum}.pdf`;
+}
+
+/** Visor embebido de una presentación en PDF, con descarga y apertura en pestaña nueva.
+ *  Mismo componente y comportamiento que en singularidad-proyectos. */
+function bloquePdf(url, titulo) {
+  if (!url) return '';
+  return `<div class="pdf-viewer-wrap">
+    <div class="pdf-toolbar">
+      <span class="pdf-title">${C.escapeHtml(titulo)}</span>
+      <a href="${url}" download class="btn-pdf-download"><span aria-hidden="true">⬇</span> Descargar PDF</a>
+      <a href="${url}" target="_blank" rel="noopener" class="btn-pdf-open">Abrir en nueva pestaña</a>
+    </div>
+    <iframe src="${url}" class="pdf-frame" title="Presentación: ${C.escapeHtml(titulo)}" loading="lazy"></iframe>
+    <p class="pdf-fallback">Si el visor no carga, <a href="${url}" target="_blank" rel="noopener">haga clic aquí para abrir el PDF</a>.</p>
+  </div>`;
+}
+
+/** Flujo metodológico semanal (Preparar → Ejecutar → Verificar → Retroalimentar → Ajustar). */
+function flujoSemanal(conEvidencia = false) {
+  const pasos = FASES_SEMANALES.map((p, i) => `<div class="flujo-paso">
+      <span class="flujo-num" aria-hidden="true">${i + 1}</span>
+      <span class="flujo-paso-texto">
+        <span>${C.escapeHtml(p.fase)}${conEvidencia ? ': ' + C.escapeHtml(p.actividad) : ''}</span>
+        ${conEvidencia ? `<span class="flujo-paso-evidencia">Evidencia: ${C.escapeHtml(p.evidencia)}</span>` : ''}
+      </span>
+    </div>`).join('');
+  return `<div class="flujo-metodologia">${pasos}</div>`;
+}
+
+function tarjetaMini(icono, nombre, descripcion, url) {
+  const inner = `${icono ? `<div class="mini-card-icon" aria-hidden="true">${icono}</div>` : ''}<h4>${C.escapeHtml(nombre)}</h4>${descripcion ? `<p>${C.escapeHtml(descripcion)}</p>` : ''}`;
+  if (url) {
+    const external = /^https?:\/\//i.test(url);
+    return `<a class="mini-card" href="${C.escapeHtml(url)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${inner}</a>`;
+  }
+  return `<div class="mini-card">${inner}</div>`;
+}
+
+function miniCardGrid(items) {
+  if (!items || !items.length) return '';
+  return `<div class="card-grid">${items.map((it) => tarjetaMini(it.icono, it.nombre, it.descripcion, it.url)).join('')}</div>`;
+}
+
+// Asigna un icono representativo según el dominio del recurso enlazado.
+function iconoRecurso(url) {
+  const u = (url || '').toLowerCase();
+  if (u.includes('who.int')) return '🏥';
+  if (u.includes('equator-network')) return '📐';
+  if (u.includes('pubmed')) return '🔬';
+  if (u.includes('openai.com')) return '💬';
+  if (u.includes('turing-way')) return '🔁';
+  return '🔗';
+}
+
+// Convierte enlaces {texto, url} de la sección Recursos en tarjetas mini con icono.
+function recursosMiniCards(links) {
+  if (!links || !links.length) return '<p class="empty-note">Recursos por definir.</p>';
+  return miniCardGrid(links.map((l) => ({
+    icono: iconoRecurso(l.url),
+    nombre: l.texto,
+    descripcion: new URL(l.url, 'https://x.invalid').hostname.replace(/^www\./, ''),
+    url: l.url,
+  })));
+}
+
 function el(html) {
   const t = document.createElement('template');
   t.innerHTML = html.trim();
@@ -119,6 +204,14 @@ async function renderInicio(container) {
     </section>
 
     <section class="section">
+      <h2 class="section-title">Cómo se trabaja cada taller</h2>
+      <div class="card">
+        <div class="card-header">Ciclo semanal común a los doce talleres</div>
+        <div class="card-body">${flujoSemanal()}</div>
+      </div>
+    </section>
+
+    <section class="section">
       <h2 class="section-title">Los doce talleres</h2>
       <div class="grid grid-3">${talleresGrid}</div>
     </section>
@@ -130,20 +223,45 @@ async function renderInicio(container) {
 // ---------- Programa ----------
 async function renderPrograma(container) {
   const { title, sections } = await C.getProgramaGeneral();
-  const blocksHtml = sections.map((s) => `
-    <section class="card section-card">
-      <div class="card-header"><h2>${C.escapeHtml(s.heading)}</h2></div>
-      <div class="card-body">${C.renderMarkdownBlock(s.lines)}</div>
-    </section>
-  `).join('');
+  const blocksHtml = sections.map((s) => {
+    const card = `
+      <section class="card section-card">
+        <div class="card-header"><h2>${C.escapeHtml(s.heading)}</h2></div>
+        <div class="card-body">${C.renderMarkdownBlock(s.lines)}</div>
+      </section>
+    `;
+    if (normalizeForCompare(s.heading) !== 'método de trabajo') return card;
+    // Inmediatamente después de "Método de trabajo" se muestra el ciclo semanal
+    // completo (con evidencia por fase), transversal a los doce talleres.
+    return card + `
+      <section class="card section-card">
+        <div class="card-header"><h2>Ciclo semanal de cada taller</h2></div>
+        <div class="card-body">${flujoSemanal(true)}</div>
+      </section>
+    `;
+  }).join('');
 
   container.innerHTML = `
     <h1 class="page-title">${C.escapeHtml(title)}</h1>
     ${privacyNotice()}
+    ${si(PROGRAMA_PRESENTACION_PDF, `
+      <section class="section">
+        <h2 class="section-title">Presentación del programa</h2>
+        ${bloquePdf(PROGRAMA_PRESENTACION_PDF, 'Programa de talleres — Semillero Singularidad')}
+      </section>
+    `)}
     <div class="stack">${blocksHtml}</div>
   `;
   setTitle('Programa');
   focusHeading(container);
+}
+
+function si(valor, html) {
+  return valor ? html : '';
+}
+
+function normalizeForCompare(h) {
+  return (h || '').toLowerCase().trim();
 }
 
 // ---------- Proyectos ----------
@@ -289,6 +407,20 @@ async function renderTaller(container, id, requestedTab) {
     } else if (t.id === 'actividad') {
       const lines = taller.tabsRaw[t.id];
       panels[t.id] = lines && lines.length ? renderActividadPanel(lines) : '<p class="empty-note">Esta sección aún no tiene contenido asignado. Se completará en una próxima edición editorial.</p>';
+    } else if (t.id === 'recursos') {
+      const lines = taller.tabsRaw[t.id];
+      const links = C.parseRecursosLinks(lines || []);
+      panels[t.id] = links.length ? recursosMiniCards(links) : (lines && lines.length ? C.renderMarkdownBlock(lines) : '<p class="empty-note">Esta sección aún no tiene contenido asignado. Se completará en una próxima edición editorial.</p>');
+    } else if (t.id === 'inicio') {
+      const lines = taller.tabsRaw[t.id];
+      const justificacion = lines && lines.length ? C.renderMarkdownBlock(lines) : '<p class="empty-note">Esta sección aún no tiene contenido asignado. Se completará en una próxima edición editorial.</p>';
+      panels[t.id] = `
+        ${justificacion}
+        <h3 class="subsection-title">Cómo se trabaja este taller</h3>
+        ${flujoSemanal()}
+        <h3 class="subsection-title">Presentación en diapositivas</h3>
+        ${bloquePdf(pdfUrlFor(taller.numero), `Taller ${taller.numero}. ${taller.nombre}`)}
+      `;
     } else {
       const lines = taller.tabsRaw[t.id];
       panels[t.id] = lines && lines.length ? C.renderMarkdownBlock(lines) : '<p class="empty-note">Esta sección aún no tiene contenido asignado. Se completará en una próxima edición editorial.</p>';
@@ -402,20 +534,17 @@ async function renderRecursos(container) {
   const porTaller = talleres.map((t) => {
     const links = C.parseRecursosLinks(t.tabsRaw.recursos);
     if (!links.length) return '';
-    const items = links.map((l) => `<li><a href="${C.escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${C.escapeHtml(l.texto)}</a></li>`).join('');
     return `<div class="card">
       <div class="card-header"><h3>Taller ${t.numero}. ${C.escapeHtml(t.nombre)}</h3></div>
-      <div class="card-body"><ul class="link-list">${items}</ul></div>
+      <div class="card-body">${recursosMiniCards(links)}</div>
     </div>`;
   }).join('');
-
-  const generalesItems = generalesLinks.map((l) => `<li><a href="${C.escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${C.escapeHtml(l.texto)}</a></li>`).join('');
 
   container.innerHTML = `
     <h1 class="page-title">Recursos</h1>
     <section class="section">
       <h2 class="section-title">Recursos generales del programa</h2>
-      <div class="card"><div class="card-body"><ul class="link-list">${generalesItems}</ul></div></div>
+      ${recursosMiniCards(generalesLinks)}
     </section>
     <section class="section">
       <h2 class="section-title">Recursos por taller</h2>

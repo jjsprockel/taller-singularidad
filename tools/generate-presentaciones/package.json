@@ -1,0 +1,12 @@
+{
+  "name": "generate-presentaciones-singularidad",
+  "private": true,
+  "type": "module",
+  "description": "Genera las presentaciones PDF de los talleres a partir de content/*.md, con la identidad visual del sitio.",
+  "scripts": {
+    "build": "node generate.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  }
+}

@@ -4,6 +4,23 @@ Sitio web estático que publica los doce talleres de inteligencia artificial apl
 
 Referencia visual: [jjsprockel.github.io/singularidad-proyectos](https://jjsprockel.github.io/singularidad-proyectos/)
 
+## Novedades de esta versión
+
+Se incorporaron tres componentes tomados y adaptados del sitio de referencia
+(`singularidad-proyectos`), para ampliar la presentación de contenidos de cada taller:
+
+- **Visor de presentación en PDF** (`bloquePdf`): cada taller tiene, en su pestaña
+  Inicio, una diapositiva descargable con toolbar, visor embebido y enlace de respaldo,
+  igual que en el sitio de referencia. Los PDF viven en `assets/presentaciones/` y se
+  generan con `tools/generate-presentaciones/` (ver ese directorio para regenerarlos
+  tras editar un taller).
+- **Flujo metodológico semanal**: el ciclo Preparar → Ejecutar → Verificar →
+  Retroalimentar → Ajustar, visible en Inicio, en cada taller y en Programa (con el
+  detalle de evidencia esperada por fase).
+- **Tarjetas mini de recursos**: los enlaces de la pestaña Recursos (por taller y en la
+  página Recursos) se muestran como tarjetas con icono en vez de una lista simple de
+  enlaces.
+
 ## Estructura del proyecto
 
 ```text
@@ -13,9 +30,14 @@ Referencia visual: [jjsprockel.github.io/singularidad-proyectos](https://jjsproc
 ├── README.md
 ├── CLAUDE.md
 ├── assets/
-│   └── logos/
-│       ├── singularidad.png
-│       └── fucs.png
+│   ├── logos/
+│   │   ├── singularidad.png
+│   │   └── fucs.png
+│   └── presentaciones/
+│       ├── programa-general.pdf
+│       └── taller-01.pdf ... taller-12.pdf
+├── tools/
+│   └── generate-presentaciones/   (script para regenerar los PDF anteriores)
 ├── content/
 │   ├── 00_programa_general.md
 │   ├── 01_taller_01.md ... 12_taller_12.md
@@ -68,6 +90,7 @@ Alternativas equivalentes: `npx serve .` o la extensión "Live Server" de VS Cod
 - Los doce talleres y el programa general están en `content/*.md`. Cada taller mantiene las secciones `Justificación`, `Resultados de aprendizaje`, `Contexto teórico`, `Preparación`, `Actividad paso a paso`, `Aplicación al proyecto`, `Entregables`, `Lista de chequeo y KPI`, `Retroalimentación semanal` y `Recursos`; estas se mapean automáticamente a las diez pestañas de la interfaz. No renombrar los encabezados `##` sin actualizar el mapa `HEADING_TO_TAB` en `js/content.js`.
 - Las plantillas descargables están en `content/plantillas/`. Se sirven tal cual (no se reconstruyen en pantalla); si se agrega un archivo nuevo, también debe añadirse su entrada en el arreglo `PLANTILLAS` de `js/ui.js` (nombre, propósito y talleres relacionados).
 - Los logotipos en `assets/logos/` son los originales del sitio de referencia y no deben recortarse, recolorearse ni reemplazarse.
+- Las presentaciones en `assets/presentaciones/` se generan a partir de estos mismos archivos `.md` (ver `tools/generate-presentaciones/README.md`). Tras editar un taller, vuelva a ejecutar el generador para que la presentación quede sincronizada; no edite los PDF directamente.
 
 ## Desplegar en GitHub Pages
 
