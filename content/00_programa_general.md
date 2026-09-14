@@ -74,19 +74,6 @@ La evaluación se realiza con una escala de cuatro niveles: 0 ausente, 1 inicial
 - Hito 4, al finalizar el taller 10: protocolo versión 1 listo para revisión formal.
 - Hito 5, al finalizar el taller 12: manuscrito inicial o paquete de resultados de práctica.
 
-## Arquitectura propuesta para la futura página
-
-La página tendrá navegación persistente a la izquierda con Inicio, Programa, Proyectos, Talleres 1 a 12, Plantillas, Recursos y Seguimiento. Cada taller usará las pestañas Inicio, Resultados de aprendizaje, Base conceptual, Preparación, Actividad, Aplicación al proyecto, Entregables, Lista de chequeo, Retroalimentación y Recursos. Los contenidos deberán ser legibles sin iniciar sesión; los archivos de trabajo y datos sensibles se alojarán únicamente en entornos autorizados.
-
-## Indicadores globales
-
-- Al menos 80 por ciento de los participantes completa 9 de 12 talleres.
-- Al menos 70 por ciento de los proyectos alcanza protocolo versión 1.
-- Cien por ciento de los proyectos mantiene bitácora de IA y control de versiones.
-- Cien por ciento de las referencias incluidas en productos evaluados tiene verificación de identidad.
-- Cero incidentes de carga no autorizada de datos sensibles.
-- Al menos una cifra o resultado clave por proyecto es reproducido por otra persona.
-
 ## Recursos generales
 
 - [Organización Mundial de la Salud. Ethics and governance of artificial intelligence for health](https://www.who.int/publications/i/item/9789240029200)
