@@ -3,17 +3,17 @@ import * as S from './storage.js';
 import { tallerPath, navigate } from './router.js';
 
 const PLANTILLAS = [
-  { file: 'ficha_proyecto.md', nombre: 'Ficha de proyecto', proposito: 'Registra código y versión, ruta A–D, título provisional, problema, población, pregunta, objetivo, papel de la IA, datos necesarios, producto esperado, riesgos y próxima decisión.', talleres: 'Taller 1 · Proyectos' },
-  { file: 'matriz_alineacion.md', nombre: 'Matriz de alineación', proposito: 'Conecta pregunta, objetivo, variable o constructo, fuente del dato, momento, análisis, producto y criterio de éxito.', talleres: 'Taller 5 · Taller 10' },
-  { file: 'registro_decisiones.md', nombre: 'Registro de decisiones', proposito: 'Documenta cada decisión relevante, la evidencia considerada, alternativas, papel de la IA y efecto sobre el protocolo o el análisis.', talleres: 'Transversal · Proyectos' },
-  { file: 'rubrica_retroalimentacion.md', nombre: 'Rúbrica de retroalimentación', proposito: 'Guía la reunión semanal con cinco dominios formativos: exactitud, coherencia, reproducibilidad, ética y comunicación.', talleres: 'Transversal · Proyectos' },
-  { file: 'matriz_evidencia.md', nombre: 'Matriz de evidencia', proposito: 'Organiza la extracción y síntesis de referencias verificadas: diseño, población, hallazgo, limitación y aporte al proyecto.', talleres: 'Taller 4' },
-  { file: 'matriz_riesgos.md', nombre: 'Matriz de riesgos', proposito: 'Identifica riesgos, causas, probabilidad, impacto, controles preventivos y riesgo residual.', talleres: 'Taller 6 · Taller 7' },
-  { file: 'plan_gestion_datos.md', nombre: 'Plan de gestión de datos', proposito: 'Inventario de fuentes de datos con sensibilidad y autorización, además del flujo y los controles de gestión.', talleres: 'Taller 7 · Taller 8' },
-  { file: 'checklist_protocolo.md', nombre: 'Lista de chequeo del protocolo', proposito: 'Verifica que el protocolo tenga título, pregunta, diseño, variables, análisis, ética, papel de la IA y cronograma completos.', talleres: 'Taller 10' },
-  { file: 'checklist_manuscrito.md', nombre: 'Lista de chequeo del manuscrito', proposito: 'Verifica título, métodos, resultados, discusión, referencias, declaraciones de autoría y uso de IA antes de enviar el manuscrito.', talleres: 'Taller 12' },
-  { file: 'bitacora_uso_ia.md', nombre: 'Bitácora de uso de IA', proposito: 'Registra fecha, tarea, plataforma, archivos usados, prompt relevante, salida, verificación y decisión humana.', talleres: 'Transversal · especialmente Taller 2' },
-  { file: 'arquitectura_contenidos_web.md', nombre: 'Arquitectura de contenidos web', proposito: 'Referencia técnica de navegación y pestañas usada para construir este sitio.', talleres: 'Referencia general' },
+  { file: 'ficha_proyecto.docx', nombre: 'Ficha de proyecto', proposito: 'Registra código y versión, ruta A–D, título provisional, problema, población, pregunta, objetivo, papel de la IA, datos necesarios, producto esperado, riesgos y próxima decisión.', talleres: 'Taller 1 · Proyectos' },
+  { file: 'matriz_alineacion.docx', nombre: 'Matriz de alineación', proposito: 'Conecta pregunta, objetivo, variable o constructo, fuente del dato, momento, análisis, producto y criterio de éxito.', talleres: 'Taller 5 · Taller 10' },
+  { file: 'registro_decisiones.docx', nombre: 'Registro de decisiones', proposito: 'Documenta cada decisión relevante, la evidencia considerada, alternativas, papel de la IA y efecto sobre el protocolo o el análisis.', talleres: 'Transversal · Proyectos' },
+  { file: 'rubrica_retroalimentacion.docx', nombre: 'Rúbrica de retroalimentación', proposito: 'Guía la reunión semanal con cinco dominios formativos: exactitud, coherencia, reproducibilidad, ética y comunicación.', talleres: 'Transversal · Proyectos' },
+  { file: 'matriz_evidencia.docx', nombre: 'Matriz de evidencia', proposito: 'Organiza la extracción y síntesis de referencias verificadas: diseño, población, hallazgo, limitación y aporte al proyecto.', talleres: 'Taller 4' },
+  { file: 'matriz_riesgos.docx', nombre: 'Matriz de riesgos', proposito: 'Identifica riesgos, causas, probabilidad, impacto, controles preventivos y riesgo residual.', talleres: 'Taller 6 · Taller 7' },
+  { file: 'plan_gestion_datos.docx', nombre: 'Plan de gestión de datos', proposito: 'Inventario de fuentes de datos con sensibilidad y autorización, además del flujo y los controles de gestión.', talleres: 'Taller 7 · Taller 8' },
+  { file: 'checklist_protocolo.docx', nombre: 'Lista de chequeo del protocolo', proposito: 'Verifica que el protocolo tenga título, pregunta, diseño, variables, análisis, ética, papel de la IA y cronograma completos.', talleres: 'Taller 10' },
+  { file: 'checklist_manuscrito.docx', nombre: 'Lista de chequeo del manuscrito', proposito: 'Verifica título, métodos, resultados, discusión, referencias, declaraciones de autoría y uso de IA antes de enviar el manuscrito.', talleres: 'Taller 12' },
+  { file: 'bitacora_uso_ia.docx', nombre: 'Bitácora de uso de IA', proposito: 'Registra fecha, tarea, plataforma, archivos usados, prompt relevante, salida, verificación y decisión humana.', talleres: 'Transversal · especialmente Taller 2' },
+  { file: 'arquitectura_contenidos_web.docx', nombre: 'Arquitectura de contenidos web', proposito: 'Referencia técnica de navegación y pestañas usada para construir este sitio.', talleres: 'Referencia general' },
 ];
 
 const HITO_TALLERES = ['taller-03', 'taller-05', 'taller-07', 'taller-10', 'taller-12'];
@@ -283,7 +283,7 @@ async function renderProyectos(container) {
     <tr><td>Taller ${row.taller}</td><td>${C.escapeHtml(row.tema)}</td><td>${C.escapeHtml(row.productos)}</td></tr>
   `).join('');
 
-  const plantillasProyecto = ['ficha_proyecto.md', 'matriz_alineacion.md', 'registro_decisiones.md', 'rubrica_retroalimentacion.md']
+  const plantillasProyecto = ['ficha_proyecto.docx', 'matriz_alineacion.docx', 'registro_decisiones.docx', 'rubrica_retroalimentacion.docx']
     .map((f) => PLANTILLAS.find((p) => p.file === f))
     .map((p) => `<li><a class="btn btn-small" href="content/plantillas/${p.file}" download>${C.escapeHtml(p.nombre)}</a></li>`)
     .join('');
@@ -515,7 +515,7 @@ async function renderPlantillas(container) {
 
   container.innerHTML = `
     <h1 class="page-title">Plantillas</h1>
-    <p class="lead">Descargue los archivos Markdown originales para usarlos como base de sus productos. No se muestran reconstruidos en pantalla: use el archivo descargado como fuente de edición.</p>
+    <p class="lead">Descargue los documentos Word (.docx) originales para usarlos como base de sus productos. Ábralos en Word, Google Docs o LibreOffice y diligéncielos directamente; no se muestran reconstruidos en pantalla.</p>
     <div class="grid grid-2">${rows}</div>
   `;
   setTitle('Plantillas');

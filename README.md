@@ -20,6 +20,12 @@ Se incorporaron tres componentes tomados y adaptados del sitio de referencia
 - **Tarjetas mini de recursos**: los enlaces de la pestaña Recursos (por taller y en la
   página Recursos) se muestran como tarjetas con icono en vez de una lista simple de
   enlaces.
+- **Plantillas en formato Word (.docx)**: las once plantillas descargables se distribuyen
+  como documentos `.docx` con la identidad visual del sitio (logos, tipografía y color
+  naranja), en vez de archivos Markdown, para que los estudiantes puedan abrirlas y
+  diligenciarlas directamente en Word, Google Docs o LibreOffice sin necesitar
+  familiaridad previa con Markdown. Se generan con `tools/generate-plantillas-docx/`
+  (ver ese directorio para regenerarlas tras editar una plantilla).
 
 ## Estructura del proyecto
 
@@ -37,22 +43,23 @@ Se incorporaron tres componentes tomados y adaptados del sitio de referencia
 │       ├── programa-general.pdf
 │       └── taller-01.pdf ... taller-12.pdf
 ├── tools/
-│   └── generate-presentaciones/   (script para regenerar los PDF anteriores)
+│   ├── generate-presentaciones/    (script para regenerar los PDF anteriores)
+│   └── generate-plantillas-docx/   (script para regenerar las plantillas .docx)
 ├── content/
 │   ├── 00_programa_general.md
 │   ├── 01_taller_01.md ... 12_taller_12.md
 │   └── plantillas/
-│       ├── ficha_proyecto.md
-│       ├── matriz_alineacion.md
-│       ├── registro_decisiones.md
-│       ├── rubrica_retroalimentacion.md
-│       ├── matriz_evidencia.md
-│       ├── matriz_riesgos.md
-│       ├── plan_gestion_datos.md
-│       ├── checklist_protocolo.md
-│       ├── checklist_manuscrito.md
-│       ├── bitacora_uso_ia.md
-│       └── arquitectura_contenidos_web.md
+│       ├── ficha_proyecto.docx (+ .md fuente)
+│       ├── matriz_alineacion.docx (+ .md fuente)
+│       ├── registro_decisiones.docx (+ .md fuente)
+│       ├── rubrica_retroalimentacion.docx (+ .md fuente)
+│       ├── matriz_evidencia.docx (+ .md fuente)
+│       ├── matriz_riesgos.docx (+ .md fuente)
+│       ├── plan_gestion_datos.docx (+ .md fuente)
+│       ├── checklist_protocolo.docx (+ .md fuente)
+│       ├── checklist_manuscrito.docx (+ .md fuente)
+│       ├── bitacora_uso_ia.docx (+ .md fuente)
+│       └── arquitectura_contenidos_web.docx (+ .md fuente)
 ├── css/
 │   └── styles.css
 └── js/
@@ -88,7 +95,7 @@ Alternativas equivalentes: `npx serve .` o la extensión "Live Server" de VS Cod
 ## Editar contenidos
 
 - Los doce talleres y el programa general están en `content/*.md`. Cada taller mantiene las secciones `Justificación`, `Resultados de aprendizaje`, `Contexto teórico`, `Preparación`, `Actividad paso a paso`, `Aplicación al proyecto`, `Entregables`, `Lista de chequeo y KPI`, `Retroalimentación semanal` y `Recursos`; estas se mapean automáticamente a las diez pestañas de la interfaz. No renombrar los encabezados `##` sin actualizar el mapa `HEADING_TO_TAB` en `js/content.js`.
-- Las plantillas descargables están en `content/plantillas/`. Se sirven tal cual (no se reconstruyen en pantalla); si se agrega un archivo nuevo, también debe añadirse su entrada en el arreglo `PLANTILLAS` de `js/ui.js` (nombre, propósito y talleres relacionados).
+- Las plantillas descargables están en `content/plantillas/`. Cada una se distribuye como documento Word (`.docx`) con la identidad visual del sitio, para que los estudiantes no necesiten familiaridad con Markdown; el archivo `.md` correspondiente se conserva en la misma carpeta como fuente editorial de la que se regenera el `.docx` (ver `tools/generate-plantillas-docx/`). Se sirven tal cual (no se reconstruyen en pantalla). Si se agrega una plantilla nueva: cree su `.md` fuente, añádala al script `tools/generate-plantillas-docx/generate.mjs`, regenere el `.docx` y añada su entrada en el arreglo `PLANTILLAS` de `js/ui.js` (nombre, propósito y talleres relacionados).
 - Los logotipos en `assets/logos/` son los originales del sitio de referencia y no deben recortarse, recolorearse ni reemplazarse.
 - Las presentaciones en `assets/presentaciones/` se generan a partir de estos mismos archivos `.md` (ver `tools/generate-presentaciones/README.md`). Tras editar un taller, vuelva a ejecutar el generador para que la presentación quede sincronizada; no edite los PDF directamente.
 

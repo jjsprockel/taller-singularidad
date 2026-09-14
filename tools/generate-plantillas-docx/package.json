@@ -1,0 +1,12 @@
+{
+  "name": "generate-plantillas-docx-singularidad",
+  "private": true,
+  "type": "module",
+  "description": "Genera las plantillas .docx descargables a partir de content/plantillas/*.md, con la identidad visual del sitio.",
+  "scripts": {
+    "build": "node generate.mjs"
+  },
+  "devDependencies": {
+    "docx": "^9.0.0"
+  }
+}
